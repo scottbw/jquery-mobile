@@ -454,18 +454,7 @@
   	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#eeeeee', EndColorStr='#ffffff')";
 }
 .ui-btn-down-d a.ui-link-inherit {
-	border: 1px solid 		#808080;
-	background: 			#ced0d2;
-	font-weight: bold;
 	color: 					#111;
-	text-shadow: none;
-	background-image: -moz-linear-gradient(top, 
-							#cccccc, 
-							#eeeeee);
-	background-image: -webkit-gradient(linear,left top,left bottom,
-		color-stop(0, 		#cccccc),
-		color-stop(1, 		#eeeeee));
-  	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#cccccc', EndColorStr='#eeeeee')";
 }
 .ui-btn-up-d,
 .ui-btn-hover-d,
@@ -537,7 +526,6 @@
 	background: 			#fadb4e;
 	font-weight: bold;
 	color: 					#333;
-	text-shadow: 0 1px 1px 	#fe3;
 	text-shadow: 0 1px 0 	#fff;
 	background-image: -moz-linear-gradient(top, 
 							#fceda7, 
@@ -705,7 +693,7 @@ a.ui-link-inherit {
 }
 .ui-disabled,
 .ui-disabled a {
-	cursor: default !important;
+	cursor: default;
 }
 
 /* Icons

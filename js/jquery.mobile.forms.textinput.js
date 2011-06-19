@@ -16,15 +16,14 @@ $.widget( "mobile.textinput", $.mobile.widget, {
 			themeclass;
 			
 		if ( !theme ) {
-			var themedParent = this.element.closest("[class*='ui-bar-'],[class*='ui-body-']"); 
-				theme = themedParent.length ?
-					/ui-(bar|body)-([a-z])/.exec( themedParent.attr("class") )[2] :
-					"c";
+			var themedParent = this.element.closest("[class*='ui-bar-'],[class*='ui-body-']"),
+				themeLetter = themedParent.length && /ui-(bar|body)-([a-z])/.exec( themedParent.attr("class") ),
+				theme = themeLetter && themeLetter[2] || "c";
 		}	
 		
 		themeclass = " ui-body-" + theme;
 		
-		$('label[for='+input.attr('id')+']').addClass('ui-input-text');
+		$('label[for="'+input.attr('id')+'"]').addClass('ui-input-text');
 		
 		input.addClass('ui-input-text ui-body-'+ o.theme);
 		
@@ -53,7 +52,8 @@ $.widget( "mobile.textinput", $.mobile.widget, {
 			}
 			
 			toggleClear();
-			input.keyup(toggleClear);	
+			input.keyup(toggleClear);
+	                input.focus(toggleClear);   
 		}
 		else{
 			input.addClass('ui-corner-all ui-shadow-inset' + themeclass);

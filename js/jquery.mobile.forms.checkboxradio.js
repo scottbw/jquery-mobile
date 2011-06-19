@@ -14,7 +14,7 @@ $.widget( "mobile.checkboxradio", $.mobile.widget, {
 			input = this.element,
 			//NOTE: Windows Phone could not find the label through a selector
 			//filter works though.
-			label = input.closest("form,fieldset,:jqmData(role='page')").find("label").filter("[for=" + input[0].id + "]"),
+			label = input.closest("form,fieldset,:jqmData(role='page')").find("label").filter('[for="' + input[0].id + '"]'),
 			inputtype = input.attr( "type" ),
 			checkedicon = "ui-icon-" + inputtype + "-on",
 			uncheckedicon = "ui-icon-" + inputtype + "-off";
@@ -58,7 +58,14 @@ $.widget( "mobile.checkboxradio", $.mobile.widget, {
 				}
 
 				self._cacheVals();
-				input.attr( "checked", inputtype === "radio" && true || !input.is( ":checked" ) );
+        
+				input.prop( "checked", inputtype === "radio" && true || !(input.prop("checked")) );
+
+				// input set for common radio buttons will contain all the radio
+				// buttons, but will not for checkboxes. clearing the checked status
+				// of other radios ensures the active button state is applied properly
+				self._getInputSet().not(input).prop('checked', false);
+
 				self._updateAll();
 				return false;
 			}
@@ -72,6 +79,13 @@ $.widget( "mobile.checkboxradio", $.mobile.widget, {
 				},
 
 				vclick: function(){
+          // adds checked attribute to checked input when keyboard is used
+          if ($(this).is(":checked")) { 
+             $(this).prop( "checked", true);   
+             self._getInputSet().not($(this)).prop('checked', false);
+          } else {
+             $(this).prop("checked", false);
+          }
 					self._updateAll();
 				},
 
@@ -101,8 +115,10 @@ $.widget( "mobile.checkboxradio", $.mobile.widget, {
 	},
 
 	_updateAll: function(){
+		var self = this;
+
 		this._getInputSet().each(function(){
-			if( $(this).is(":checked") || this.inputtype === "checkbox" ){
+			if( $(this).is(":checked") || self.inputtype === "checkbox" ){
 				$(this).trigger("change");
 			}
 		})
@@ -114,7 +130,9 @@ $.widget( "mobile.checkboxradio", $.mobile.widget, {
 			label = this.label,
 			icon = label.find( ".ui-icon" );
 
-		if ( input[0].checked ) {
+		// input[0].checked expando doesn't always report the proper value
+		// for checked='checked'
+		if ( $(input[0]).prop('checked') ) {
 			label.addClass( $.mobile.activeBtnClass );
 			icon.addClass( this.checkedicon ).removeClass( this.uncheckedicon );
 
@@ -132,11 +150,11 @@ $.widget( "mobile.checkboxradio", $.mobile.widget, {
 	},
 
 	disable: function(){
-		this.element.attr("disabled",true).parent().addClass("ui-disabled");
+		this.element.prop("disabled",true).parent().addClass("ui-disabled");
 	},
 
 	enable: function(){
-		this.element.attr("disabled",false).parent().removeClass("ui-disabled");
+		this.element.prop("disabled",false).parent().removeClass("ui-disabled");
 	}
 });
 })( jQuery );

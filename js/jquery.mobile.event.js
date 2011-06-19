@@ -7,7 +7,7 @@
 (function($, undefined ) {
 
 // add new event shortcuts
-$.each( "touchstart touchmove touchend orientationchange tap taphold swipe swipeleft swiperight scrollstart scrollstop".split( " " ), function( i, name ) {
+$.each( "touchstart touchmove touchend orientationchange throttledresize tap taphold swipe swipeleft swiperight scrollstart scrollstop".split( " " ), function( i, name ) {
 	$.fn[ name ] = function( fn ) {
 		return fn ? this.bind( name, fn ) : this.trigger( name );
 	};
@@ -81,7 +81,7 @@ $.event.special.tap = {
 				function clearTapHandlers() {
 					touching = false;
 					clearTimeout(timer);
-					$(this).unbind("vmouseclick", clickHandler).unbind("vmousecancel", clearTapHandlers);
+					$this.unbind("vclick", clickHandler).unbind("vmousecancel", clearTapHandlers);
 				}
 				
 				function clickHandler(event) {
@@ -182,7 +182,7 @@ $.event.special.swipe = {
 			
 			// Because the orientationchange event doesn't exist, simulate the
 			// event by testing window dimensions on resize.
-			win.bind( "resize", handler );
+			win.bind( "throttledresize", handler );
 		},
 		teardown: function(){
 			// If the event is not supported natively, return false so that
@@ -191,7 +191,7 @@ $.event.special.swipe = {
 			
 			// Because the orientationchange event doesn't exist, unbind the
 			// resize event handler.
-			win.unbind( "resize", handler );
+			win.unbind( "throttledresize", handler );
 		},
 		add: function( handleObj ) {
 			// Save a reference to the bound event handler.
@@ -222,12 +222,47 @@ $.event.special.swipe = {
 	
 	// Get the current page orientation. This method is exposed publicly, should it
 	// be needed, as jQuery.event.special.orientationchange.orientation()
-	special_event.orientation = get_orientation = function() {
+	$.event.special.orientationchange.orientation = get_orientation = function() {
 		var elem = document.documentElement;
 		return elem && elem.clientWidth / elem.clientHeight < 1.1 ? "portrait" : "landscape";
 	};
 	
 })(jQuery);
+
+
+// throttled resize event
+(function(){
+	$.event.special.throttledresize = {
+		setup: function() {
+			$( this ).bind( "resize", handler );	
+		},
+		teardown: function(){
+			$( this ).unbind( "resize", handler );
+		}
+	};
+
+	var throttle = 250,
+		handler = function(){
+			curr = ( new Date() ).getTime();
+			diff = curr - lastCall;
+			if( diff >= throttle ){
+				lastCall = curr;
+				$( this ).trigger( "throttledresize" );
+			}
+			else{
+				if( heldCall ){
+					clearTimeout( heldCall );
+				}
+				//promise a held call will still execute
+				heldCall = setTimeout( handler, throttle - diff );
+			}
+		},
+		lastCall = 0,
+		heldCall,
+		curr,
+		diff;
+})();
+
 
 $.each({
 	scrollstop: "scrollstart",

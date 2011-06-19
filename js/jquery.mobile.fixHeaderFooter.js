@@ -68,6 +68,19 @@ $.fixedToolbars = (function(){
 					}
 				}
 			})
+			.bind('silentscroll', showEventCallback);
+
+/*		
+		The below checks first for a $(document).scrollTop() value, and if zero, binds scroll events to $(window) instead. If the scrollTop value is actually zero, both will return zero anyway.
+
+		Works with $(document), not $(window) : Opera Mobile (WinMO phone; kinda broken anyway)
+		Works with $(window), not $(document) : IE 7/8
+		Works with either $(window) or $(document) : Chrome, FF 3.6/4, Android 1.6/2.1, iOS
+		Needs work either way : BB5, Opera Mobile (iOS)
+
+*/
+
+		(( $(document).scrollTop() == 0 ) ? $(window) : $(document))
 			.bind('scrollstart',function(event){
 				scrollTriggered = true;
 				if(stateBefore == null){ stateBefore = currentstate; }
@@ -93,8 +106,7 @@ $.fixedToolbars = (function(){
 					$.fixedToolbars.startShowTimer();
 				}
 				stateBefore = null;
-			})
-			.bind('silentscroll', showEventCallback);
+			});
 
 			$(window).bind('resize', showEventCallback);
 	});
@@ -104,10 +116,9 @@ $.fixedToolbars = (function(){
 		var page = $(event.target),
 			footer = page.find( ":jqmData(role='footer')" ),
 			id = footer.data('id'),
-			prevPage = ui.prevPage;
-		
-		prevFooter = prevPage && prevPage.find( ":jqmData(role='footer')" );
-		var prevFooterMatches = prevFooter.jqmData( "id" ) === id;
+			prevPage = ui.prevPage,
+			prevFooter = prevPage && prevPage.find( ":jqmData(role='footer')" ),
+			prevFooterMatches = prevFooter.length && prevFooter.jqmData( "id" ) === id;
 		
 		if( id && prevFooterMatches ){
 			stickyFooter = footer;
@@ -129,8 +140,10 @@ $.fixedToolbars = (function(){
 		
 		$.fixedToolbars.show(true, this);	
 	});
+    
+    //When a collapsiable is hidden or shown we need to trigger the fixed toolbar to reposition itself (#1635)
+	$( ".ui-collapsible-contain" ).live( "collapse expand", showEventCallback );
 
-	
 	// element.getBoundingClientRect() is broken in iOS 3.2.1 on the iPad. The
 	// coordinates inside of the rect it returns don't have the page scroll position
 	// factored out of it like the other platforms do. To get around this,

@@ -2,12 +2,12 @@
 <html> 
 	<head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1"> 
-	<title>jQuery Mobile Docs - Lists</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<title>jQuery Mobile Docs - Lists Overview</title> 
 	<link rel="stylesheet"  href="../../themes/default/" />  
 	<link rel="stylesheet" href="../_assets/css/jqm-docs.css"/>
-	<script type="text/javascript" src="../../js/jquery.js"></script>
-	<script type="text/javascript" src="../../js/"></script>
+	<script src="../../js/jquery.js"></script>
+	<script src="../../js/"></script>
 </head> 
 <body> 
 
@@ -62,7 +62,7 @@
 			
 			
 			<h2>Search filter</h2>
-			<p>jQuery Mobile provides a very easy way to filter a list with a simple client-side search feature. To make a list filterable, simply add the <code>data-filter="true"</code> attribute to the list. The framework will then append a search box above the list and add the behavior to filter out list items that don't contain the current search string as the user types. The input's placeholder text defaults to "Filter items...". To configure the placeholder text in the search input, you can either bind to the <code>mobileinit</code> event and set the <code>$.mobile.listview.prototype.options.filterPlaceholder</code> option to a string of your choosing, or use the data-attribute <code>data-filter-placeholder</code> on your listview.</p>
+			<p>jQuery Mobile provides a very easy way to filter a list with a simple client-side search feature. To make a list filterable, simply add the <code>data-filter="true"</code> attribute to the list. The framework will then append a search box above the list and add the behavior to filter out list items that don't contain the current search string as the user types. The input's placeholder text defaults to "Filter items...". To configure the placeholder text in the search input, you can either bind to the <code>mobileinit</code> event and set the <code>$.mobile.listview.prototype.options.filterPlaceholder</code> option to a string of your choosing, or use the data-attribute <code>data-filter-placeholder</code> on your listview. By default the search box will inherit its theme from its parent. The search box theme can be configured using the data-attribute <code>data-filter-theme</code> on your listview.</p>
 
 			<a href="lists-search.html" data-role="button" data-icon="arrow-r" data-iconpos="right">Search filter example</a>
 			
